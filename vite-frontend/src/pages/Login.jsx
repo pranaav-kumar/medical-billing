@@ -8,7 +8,7 @@ function Login() {
 
 const handleLogin = async () => {
   try {
-    const res = await API.post("/login", form);
+    const res = await API.post("/api/login", form);
 
     const user = res.data.user;
 
