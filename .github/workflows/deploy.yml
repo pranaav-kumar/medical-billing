@@ -41,3 +41,17 @@ jobs:
       - name: Push Frontend Image
         run: |
           docker push medicalbilling.azurecr.io/medical-frontend:latest
+
+      # 7. Deploy Backend to Azure Web App
+      - name: Deploy Backend Container
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: cloud
+          images: medicalbilling.azurecr.io/medical-backend:latest
+
+      # 8. Deploy Frontend Container
+      - name: Deploy Frontend Container
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: cloud-front
+          images: medicalbilling.azurecr.io/medical-frontend:latest
