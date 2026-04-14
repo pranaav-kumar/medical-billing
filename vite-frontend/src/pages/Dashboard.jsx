@@ -46,10 +46,10 @@ function Dashboard() {
 
   // 🥧 PIE CHART DATA (CLAIMS)
   const claimData = [
-    { name: "Approved", value: data.claimStats.approved || 0 },
-    { name: "Pending", value: data.claimStats.pending || 0 },
-    { name: "Rejected", value: data.claimStats.rejected || 0 }
-  ];
+  { name: "Approved", value: data.claimStats?.approved || 0 },
+  { name: "Pending", value: data.claimStats?.pending || 0 },
+  { name: "Rejected", value: data.claimStats?.rejected || 0 }
+];
 
   const COLORS = ["#22c55e", "#facc15", "#ef4444"];
 
@@ -89,9 +89,9 @@ function Dashboard() {
           className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-xl shadow-lg">
           <h3>Claims</h3>
           <p className="text-3xl font-bold">
-            {(data.claimStats.approved || 0) +
-             (data.claimStats.pending || 0) +
-             (data.claimStats.rejected || 0)}
+            {(data.claimStats?.approved || 0) +
+             (data.claimStats?.pending || 0) +
+             (data.claimStats?.rejected || 0)}
           </p>
         </motion.div>
 
