@@ -36,21 +36,21 @@ function AddVisit() {
 
     try {
       // 🔹 1. CREATE VISIT
-      const visitRes = await API.post("/visits", {
+      const visitRes = await API.post("/api/visits", {
         patient_id: form.patient_id
       });
 
       const visit_id = visitRes.data.visitId;
 
       // 🔹 2. ADD DIAGNOSIS (ICD)
-      await API.post("/diagnosis", {
+      await API.post("/api/diagnosis", {
         visit_id,
         code: form.diagnosis_code,
         description: form.diagnosis_desc
       });
 
       // 🔹 3. ADD TREATMENT (CPT)
-      await API.post("/treatments", {
+      await API.post("/api/treatments", {
         visit_id,
         code: form.treatment_code,
         description: form.treatment_desc,

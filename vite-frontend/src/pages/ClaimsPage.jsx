@@ -13,7 +13,7 @@ function ClaimsPage() {
   // ✅ Fetch claims
   const fetchClaims = async () => {
     try {
-      const res = await API.get("/claims");
+      const res = await API.get("/api/claims");
       setClaims(res.data);
     } catch (err) {
       console.error("Error fetching claims:", err);
@@ -27,7 +27,7 @@ function ClaimsPage() {
   // ✅ Update claim status (FIXED _id)
   const updateStatus = async (id, newStatus) => {
     try {
-      await API.put(`/claims/${id}`, { status: newStatus });
+      await API.put(`/api/claims/${id}`, { status: newStatus });
       fetchClaims(); // refresh
     } catch (err) {
       console.error("Error updating claim:", err);

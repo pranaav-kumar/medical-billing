@@ -9,7 +9,7 @@ function SearchPatient() {
 
   const handleSearch = async () => {
     try {
-      const res = await API.get("/patients");
+      const res = await API.get("/api/patients");
 
       // filter locally (simple + fast)
       const filtered = res.data.filter((p) =>

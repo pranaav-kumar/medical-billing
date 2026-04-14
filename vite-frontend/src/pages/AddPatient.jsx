@@ -12,7 +12,7 @@ function AddPatient() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await API.post("/patients", form);
+    await API.post("/api/patients", form);
     alert("Patient Added ✅");
   };
 

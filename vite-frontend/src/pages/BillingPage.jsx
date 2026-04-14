@@ -19,7 +19,7 @@ function BillingPage() {
 
   const fetchInvoice = async () => {
     try {
-      const res = await API.get(`/billing/${visit_id}`);
+      const res = await API.get(`/api/billing/${visit_id}`);
       setData(res.data);
     } catch (err) {
       console.error(err);
@@ -39,7 +39,7 @@ function BillingPage() {
   // ✅ MARK PAID
   const markPaid = async () => {
     try {
-      await API.put(`/billing/pay/${visit_id}`);
+      await API.put(`/api/billing/pay/${visit_id}`);
       alert("Payment Successful ✅");
       fetchInvoice();
     } catch (err) {
@@ -52,7 +52,7 @@ function BillingPage() {
     try {
       setLoadingClaim(true);
 
-      await API.post(`/claims/${visit_id}`, {
+      await API.post(`/api/claims/${visit_id}`, {
         provider: "City Hospital",
         payer: "Star Health Insurance"
       });

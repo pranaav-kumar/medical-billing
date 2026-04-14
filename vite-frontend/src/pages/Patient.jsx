@@ -12,7 +12,7 @@ function Patients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get("/patients").then(res => setPatients(res.data));
+    API.get("/api/patients").then(res => setPatients(res.data));
   }, []);
 
   return (

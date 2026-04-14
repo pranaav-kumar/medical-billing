@@ -14,7 +14,7 @@ function DoctorDashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await API.get("/dashboard");
+      const res = await API.get("/api/dashboard");
       console.log("Doctor Dashboard Data:", res.data); // ✅ DEBUG
 
       setData({

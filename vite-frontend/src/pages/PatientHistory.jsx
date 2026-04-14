@@ -16,7 +16,7 @@ function PatientHistory() {
 
   const fetchHistory = async () => {
     try {
-      const res = await API.get(`/patient-history/${id}`);
+      const res = await API.get(`/api/patient-history/${id}`);
       setData(res.data);
 
       const diagMap = {};
@@ -24,8 +24,8 @@ function PatientHistory() {
 
       // fetch diagnosis & treatments per visit
       for (let v of res.data.visits) {
-        const d = await API.get(`/diagnosis/${v.visit_id}`);
-        const t = await API.get(`/treatments/${v.visit_id}`);
+        const d = await API.get(`/api/diagnosis/${v.visit_id}`);
+        const t = await API.get(`/api/treatments/${v.visit_id}`);
 
         diagMap[v.visit_id] = d.data;
         treatMap[v.visit_id] = t.data;

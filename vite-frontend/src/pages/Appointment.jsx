@@ -13,7 +13,7 @@ function Appointment() {
     e.preventDefault();
 
     try {
-      await API.post("/appointments", form);
+      await API.post("/api/appointments", form);
       alert("Appointment booked successfully");
 
       setForm({
