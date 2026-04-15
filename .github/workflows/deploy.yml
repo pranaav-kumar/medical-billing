@@ -30,30 +30,30 @@ jobs:
 
       # 4. Build backend
       - name: Build Backend Docker Image
-        run: docker build -t medicalbilling.azurecr.io/medical-backend:latest ./backend
+        run: docker build -t medicalbilling.azurecr.io/medical-backend:v7 ./backend
 
       # 5. Push backend
       - name: Push Backend Image
-        run: docker push medicalbilling.azurecr.io/medical-backend:latest
+        run: docker push medicalbilling.azurecr.io/medical-backend:v7
 
       # 6. Build frontend
       - name: Build Frontend Docker Image
-        run: docker build -t medicalbilling.azurecr.io/medical-frontend:latest ./vite-frontend
+        run: docker build -t medicalbilling.azurecr.io/medical-frontend:v7 ./vite-frontend
 
       # 7. Push frontend
       - name: Push Frontend Image
-        run: docker push medicalbilling.azurecr.io/medical-frontend:latest
+        run: docker push medicalbilling.azurecr.io/medical-frontend:v7
 
       # 8. Deploy backend
       - name: Deploy Backend Container
         uses: azure/webapps-deploy@v2
         with:
           app-name: cloud
-          images: medicalbilling.azurecr.io/medical-backend:latest
+          images: medicalbilling.azurecr.io/medical-backend:v7
 
       # 9. Deploy frontend
       - name: Deploy Frontend Container
         uses: azure/webapps-deploy@v2
         with:
           app-name: cloud-front
-          images: medicalbilling.azurecr.io/medical-frontend:latest
+          images: medicalbilling.azurecr.io/medical-frontend:v7
