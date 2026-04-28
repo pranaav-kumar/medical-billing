@@ -12,8 +12,8 @@ env:
   BACKEND_IMAGE:      medical-backend
   FRONTEND_IMAGE:     medical-frontend
   RESOURCE_GROUP:     medical-rg-demo
-  BACKEND_APP_NAME:   medical-backend-pranaav
-  FRONTEND_APP_NAME:  medical-frontend-pranaav
+  BACKEND_APP_NAME:   cloud-cye5c7dnb8gmh8bw
+  FRONTEND_APP_NAME:  cloud-front-gqhmgjfwe0ckhtdu
 
 # ─── JOBS ─────────────────────────────────────────────────────────────────────
 jobs:
@@ -96,5 +96,5 @@ jobs:
       # 4. Summary
       - name: Deployment summary
         run: |
-          echo "✅ Backend deployed:  https://${{ env.BACKEND_APP_NAME }}.azurewebsites.net"
-          echo "✅ Frontend deployed: https://${{ env.FRONTEND_APP_NAME }}.azurewebsites.net"
+          echo "✅ Backend deployed:  https://cloud-cye5c7dnb8gmh8bw.southeastasia-01.azurewebsites.net"
+          echo "✅ Frontend deployed: https://cloud-front-gqhmgjfwe0ckhtdu.southeastasia-01.azurewebsites.net"
