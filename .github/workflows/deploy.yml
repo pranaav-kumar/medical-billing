@@ -1,67 +1,59 @@
-name: 🚀 Build & Deploy — Medical Billing App
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
-# ─── GLOBAL ENVIRONMENT ───────────────────────────────────────────────────────
-env:
-  ACR_REGISTRY:       medicalbillingpranaav.azurecr.io   # ← fixed: matches Terraform output
-  BACKEND_IMAGE:      medical-backend
-  FRONTEND_IMAGE:     medical-frontend
-  RESOURCE_GROUP:     medical-rg-demo
-  BACKEND_APP_NAME:   medical-backend-pranaav             # ← fixed: matches Terraform output
-  FRONTEND_APP_NAME:  medical-frontend-pranaav            # ← fixed: matches Terraform output
-
-# ─── JOBS ─────────────────────────────────────────────────────────────────────
 jobs:
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # JOB 1 — Build Docker images and push to ACR
-  # ═══════════════════════════════════════════════════════════════════════════
   build-and-push:
-    name: 🐳 Build & Push Images to ACR
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1. Checkout
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # 2. Set up Docker Buildx for efficient multi-layer caching
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # 3. Log in to Azure Container Registry using ACR admin credentials
-      - name: Log in to Azure Container Registry
-        uses: docker/login-action@v3
+      # 2. Login to Azure (THIS MUST COME BEFORE DEPLOY)
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
-          registry: ${{ env.ACR_REGISTRY }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 3. Login to ACR
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: medicalbilling.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # 4. Build backend image
-      - name: Build and push backend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context:    ./backend
-          file:       ./backend/Dockerfile
-          push:       true
-          tags:       ${{ env.ACR_REGISTRY }}/${{ env.BACKEND_IMAGE }}:latest
-          cache-from: type=gha
-          cache-to:   type=gha,mode=max
+      # 4. Build backend
+      - name: Build Backend Docker Image
+        run: docker build -t medicalbilling.azurecr.io/medical-backend:v7 ./backend
 
-      # 5. Build frontend image (VITE_API_BASE_URL baked in at build time)
-      - name: Build and push frontend Docker image
-        uses: docker/build-push-action@v5
+      # 5. Push backend
+      - name: Push Backend Image
+        run: docker push medicalbilling.azurecr.io/medical-backend:v7
+
+      # 6. Build frontend
+      - name: Build Frontend Docker Image
+        run: docker build -t medicalbilling.azurecr.io/medical-frontend:v7 ./vite-frontend
+
+      # 7. Push frontend
+      - name: Push Frontend Image
+        run: docker push medicalbilling.azurecr.io/medical-frontend:v7
+
+      # 8. Deploy backend
+      - name: Deploy Backend Container
+        uses: azure/webapps-deploy@v2
         with:
-          context:    ./vite-frontend
-          file:       ./vite-frontend/Dockerfile
-          push:       true
-          tags:       ${{ env.ACR_REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
-          cache-from: type=gha
-          cache-to:   type=gha,mode=max
-          build-args: |
-            VITE_API_BASE_URL=https://medical-backend-pranaav.azurewebsites.net
+          app-name: cloud
+          images: medicalbilling.azurecr.io/medical-backend:v7
+
+      # 9. Deploy frontend
+      - name: Deploy Frontend Container
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: cloud-front
+          images: medicalbilling.azurecr.io/medical-frontend:v7
