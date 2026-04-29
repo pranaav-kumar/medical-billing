@@ -28,7 +28,7 @@ import InventoryPage        from "./pages/InventoryPage";
 import RequestInventoryPage from "./pages/RequestInventoryPage";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   return (
     <Routes>

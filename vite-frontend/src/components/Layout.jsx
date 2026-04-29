@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 
 function Layout() {
-  const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   return (
     <div className="flex h-screen">
