@@ -13,7 +13,7 @@ function Navbar() {
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between">
 
-      <h1 className="font-bold">🏥 Med System</h1>
+      <h1 className="font-bold">Med System</h1>
 
       <div className="space-x-4">
 

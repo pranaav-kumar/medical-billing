@@ -29,7 +29,7 @@ variable "location" {
 variable "acr_name" {
   description = "Azure Container Registry name (must be globally unique, no hyphens)"
   type        = string
-  default     = "medicalbilling"
+  default     = "medicalbillingpranaav"
 }
 
 variable "plan_name" {

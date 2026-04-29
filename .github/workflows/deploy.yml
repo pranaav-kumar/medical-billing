@@ -8,12 +8,12 @@ on:
 
 # ─── GLOBAL ENVIRONMENT ───────────────────────────────────────────────────────
 env:
-  ACR_REGISTRY:       medicalbilling.azurecr.io
+  ACR_REGISTRY:       medicalbillingpranaav.azurecr.io   # ← fixed: matches Terraform output
   BACKEND_IMAGE:      medical-backend
   FRONTEND_IMAGE:     medical-frontend
   RESOURCE_GROUP:     medical-rg-demo
-  BACKEND_APP_NAME:   cloud-cye5c7dnb8gmh8bw
-  FRONTEND_APP_NAME:  cloud-front-gqhmgjfwe0ckhtdu
+  BACKEND_APP_NAME:   medical-backend-pranaav             # ← fixed: matches Terraform output
+  FRONTEND_APP_NAME:  medical-frontend-pranaav            # ← fixed: matches Terraform output
 
 # ─── JOBS ─────────────────────────────────────────────────────────────────────
 jobs:
@@ -53,7 +53,7 @@ jobs:
           cache-from: type=gha
           cache-to:   type=gha,mode=max
 
-      # 5. Build frontend image
+      # 5. Build frontend image (VITE_API_BASE_URL baked in at build time)
       - name: Build and push frontend Docker image
         uses: docker/build-push-action@v5
         with:
@@ -63,3 +63,5 @@ jobs:
           tags:       ${{ env.ACR_REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
           cache-from: type=gha
           cache-to:   type=gha,mode=max
+          build-args: |
+            VITE_API_BASE_URL=https://medical-backend-pranaav.azurewebsites.net
