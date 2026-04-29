@@ -14,13 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Login to Azure (THIS MUST COME BEFORE DEPLOY)
+      # 2. Set unique image tag using run number + 10
+      - name: Set image tag
+        run: echo "IMAGE_TAG=v$(( ${{ github.run_number }} + 20 ))" >> $GITHUB_ENV
+
+      # 3. Login to Azure
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 3. Login to ACR
+      # 4. Login to ACR
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
@@ -28,32 +32,36 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # 4. Build backend
+      # 5. Build backend
       - name: Build Backend Docker Image
-        run: docker build -t medicalbilling.azurecr.io/medical-backend:v7 ./backend
+        run: docker build -t medicalbilling.azurecr.io/medical-backend:${{ env.IMAGE_TAG }} ./backend
 
-      # 5. Push backend
+      # 6. Push backend
       - name: Push Backend Image
-        run: docker push medicalbilling.azurecr.io/medical-backend:v7
+        run: docker push medicalbilling.azurecr.io/medical-backend:${{ env.IMAGE_TAG }}
 
-      # 6. Build frontend
-      - name: Build Frontend Docker Image
-        run: docker build -t medicalbilling.azurecr.io/medical-frontend:v7 ./vite-frontend
-
-      # 7. Push frontend
-      - name: Push Frontend Image
-        run: docker push medicalbilling.azurecr.io/medical-frontend:v7
-
-      # 8. Deploy backend
+      # 7. Deploy backend
       - name: Deploy Backend Container
         uses: azure/webapps-deploy@v2
         with:
           app-name: cloud
-          images: medicalbilling.azurecr.io/medical-backend:v7
+          images: medicalbilling.azurecr.io/medical-backend:${{ env.IMAGE_TAG }}
 
-      # 9. Deploy frontend
+      # 8. Wait for backend to stabilize before deploying frontend
+      - name: Wait for backend to stabilize
+        run: sleep 30
+
+      # 9. Build frontend
+      - name: Build Frontend Docker Image
+        run: docker build -t medicalbilling.azurecr.io/medical-frontend:${{ env.IMAGE_TAG }} ./vite-frontend
+
+      # 10. Push frontend
+      - name: Push Frontend Image
+        run: docker push medicalbilling.azurecr.io/medical-frontend:${{ env.IMAGE_TAG }}
+
+      # 11. Deploy frontend
       - name: Deploy Frontend Container
         uses: azure/webapps-deploy@v2
         with:
           app-name: cloud-front
-          images: medicalbilling.azurecr.io/medical-frontend:v7
+          images: medicalbilling.azurecr.io/medical-frontend:${{ env.IMAGE_TAG }}
